@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Psychology Glossary Practice</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0;
+    background: radial-gradient(circle at top left, #3f3100, #1a1400);
+    display: flex; justify-content: center;
+  }
+  .container {
+    max-width: 700px;
+    width: 95%;
+    background: rgba(60, 50, 0, 0.9);
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7), 0 0 50px rgba(255, 215, 0, 0.4);
+    color: #fffbe5;
+  }
+  h2 { 
+    text-align: center; 
+    font-size: 1.8rem; 
+    margin-bottom: 15px; 
+    color: #fff5b0;
+    text-shadow: 0 0 8px #ffd700, 0 0 15px #ffea70;
+  }
+  .word { 
+    font-size: 1.4rem; 
+    font-weight: 600; 
+    text-align: center; 
+    margin: 15px 0; 
+    color: #fff7c2;
+    text-shadow: 0 0 6px #ffd700;
+  }
+  textarea {
+    width: 100%;
+    height: 120px;
+    padding: 12px; font-size: 1rem;
+    border-radius: 12px; 
+    border: 2px solid #ffd700;
+    background: rgba(50,40,0,0.8);
+    color: #fffce6;
+    box-sizing: border-box;
+    outline: none;
+    box-shadow: inset 0 0 10px rgba(255,215,0,0.4);
+    transition: 0.2s;
+  }
+  textarea:focus {
+    border: 2px solid #ffe34d;
+    box-shadow: 0 0 15px #ffe34d, inset 0 0 10px rgba(255,227,77,0.5);
+  }
+  .stars { text-align: center; margin: 15px 0; }
+  .star { font-size: 2rem; cursor: pointer; color: #665c33; transition: 0.3s; }
+  .star:hover { transform: scale(1.2); filter: drop-shadow(0 0 5px #ffe34d); }
+  .star.selected { color: #ffd700; text-shadow: 0 0 8px #ffe34d; }
+  .row {
+    display: flex; justify-content: center;
+    flex-wrap: wrap; gap: 12px; margin: 15px 0;
+  }
+  button {
+    background: linear-gradient(145deg, #ffd700, #c9a300);
+    color: black;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.6),
+                inset 0 -2px 5px rgba(255,255,255,0.3);
+    transition: all 0.25s ease;
+    font-weight: 600;
+  }
+  button:hover {
+    background: linear-gradient(145deg, #ffe34d, #ffd700);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 0 20px #ffe34d, 0 0 35px rgba(255,227,77,0.6);
+  }
+  #log {
+    background: rgba(50,40,0,0.7);
+    padding: 15px;
+    border-radius: 14px;
+    margin-top: 20px;
+    max-height: 260px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    color: #fffbe0;
+    box-shadow: inset 0 0 12px rgba(255,215,0,0.4);
+    box-sizing: border-box;
+  }
+  #log b { color: #ffe866; }
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #ffe866;
+    text-shadow: 0 0 5px #ffd700, 0 0 12px #ffea70;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Psychology Glossary Practice</h2>
+  
+  <!-- Row 1: Navigation -->
+  <div class="row">
+    <button onclick="prevWord()">⬅ Back</button>
+    <button onclick="nextWord()">Next ➡</button>
+  </div>
+
+  <!-- Word -->
+  <div class="word" id="word"></div>
+  <textarea id="definition" placeholder="Write your definition here..."></textarea>
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Row 2: Tools -->
+  <div class="row">
+    <button onclick="clearAll()">🧹 Clear All</button>
+    <button onclick="clearEntry()">✏ Clear Entry</button>
+    <button onclick="downloadEntriesTxt()">⬇ Save as TXT</button>
+  </div>
+
+  <!-- Log -->
+  <div id="log"></div>
+
+  <!-- Footer -->
+  <div class="footer">© Surbhi Sharma @surbhipsychtutor</div>
+</div>
+
+<script>
+const concepts = [
+  "Adaptation","Aggression","Alarm reaction","Alienation","Anal stage","Anorexia nervosa",
+  "Antisocial personality","Anxiety","Anxiety disorders","Applied psychology","Aptitude",
+  "Aptitude tests","Archetypes","Arousal","Attitudes","Attitude object","Autism spectrum disorder",
+  "Balance","Behaviour therapy","Beliefs","Bipolar and related disorders","Cardinal trait","Case study",
+  "Central traits","Centrality of attitude","Client-centred (Rogerian) therapy","Cognition",
+  "Cognitive assessment system","Cognitive consistency","Cognitive dissonance","Cognitive therapies",
+  "Cohesiveness","Collective unconscious","Componential intelligence","Conflict","Congruent attitude change",
+  "Contextual intelligence","Coping","Creativity","Culture-fair test","Defence mechanisms",
+  "Deinstitutionalisation","Delusions","Depersonalisation/derealisation disorder","Depressive disorders",
+  "Diathesis-stress model","Diffusion of responsibility","Discrimination","Displacement","Dissociation","Ego",
+  "Emotional intelligence","Empathy","Environment","Exhaustion","Exorcism","Experiential intelligence",
+  "Extraversion","Extremeness of attitude","Factor analysis","Fluid intelligence",
+  "General adaptation syndrome (GAS)","Genetics","Gestalt therapy","g-factor","Group","Group test","Groupthink",
+  "Hallucination","Halo effect","Hardiness","Homeostasis","Humanistic approach","Humanistic therapy","Id",
+  "Ideal self","Identification","Identity","Incongruent attitude change","Individual differences","Individual test",
+  "Industrial/organisational psychology","Inferiority complex","Ingroup","Intellectual disability",
+  "Intellectual giftedness","Intelligence","Intelligence quotient (IQ)","Intelligence tests","Interest","Interview",
+  "Introversion","Kernel of truth","Latency period","Libido","Life skills","Lifestyle","Meditation",
+  "Mental age (MA)","Metaneeds","Modelling","Neurodevelopmental disorders","Neurotransmitter","Normal probability curve",
+  "Norms","Observational method","Obsessive-compulsive disorder","Oedipus complex","Optimism","Outgroup","Performance test",
+  "Personal identity","Persuasibility","Phallic stage","Phobia","Planning","Positive health",
+  "Post-traumatic stress disorder","Prejudice","Primary group","Problem solving behaviour","Projection",
+  "Projective techniques","Proximity","Psychodynamic approach","Psychodynamic therapy","Psychological test",
+  "Psychoneuroimmunology","Psychotherapy","Rational emotive therapy (RET)","Rationalisation","Reaction formation",
+  "Regression","Rehabilitation","Relaxation training","Repression","Resilience","Resistance","Roles","Scapegoating",
+  "Schizophrenia","Self-actualisation","Self-awareness","Self-efficacy","Self-esteem","Self-fulfilling prophecy",
+  "Self-regulation","Sensitivity","Simplicity or complexity (multiplexity) of attitude","Simultaneous processing",
+  "Situationism","Social facilitation","Social inhibition","Social loafing","Social support","Somatoform disorders",
+  "Status","Stereotype","Stress","Stressors","Structure","Substance abuse","Successive processing","Superego",
+  "Surface traits","Syndrome","Systematic desensitisation","Therapeutic alliance","Token economy","Trait","Trait approach",
+  "Typology","Unconditional positive regard","Unconscious","Valence of attitude","Values","Verbal test"
+].sort(() => Math.random() - 0.5);
+
+let currentIndex = 0;
+let entries;
+try {
+  entries = JSON.parse(localStorage.getItem("psychEntries")) || {};
+} catch(e) {
+  entries = {};
+}
+
+const wordEl = document.getElementById("word");
+const defEl = document.getElementById("definition");
+const starsEl = document.getElementById("stars");
+const logEl = document.getElementById("log");
+
+// setup stars
+for (let i = 1; i <= 5; i++) {
+  const span = document.createElement("span");
+  span.classList.add("star");
+  span.textContent = "★";
+  span.onclick = () => rate(i);
+  starsEl.appendChild(span);
+}
+
+// auto-save on typing
+defEl.addEventListener("input", saveEntry);
+
+function showWord() {
+  const word = concepts[currentIndex];
+  wordEl.textContent = word;
+  defEl.value = entries[word]?.definition || "";
+  highlightStars(entries[word]?.rating || 0);
+  updateLog();
+}
+
+function saveEntry() {
+  const word = concepts[currentIndex];
+  entries[word] = {
+    definition: defEl.value,
+    rating: entries[word]?.rating || 0
+  };
+  localStorage.setItem("psychEntries", JSON.stringify(entries));
+  updateLog();
+}
+
+function rate(stars) {
+  const word = concepts[currentIndex];
+  if (!entries[word]) entries[word] = { definition: "", rating: 0 };
+  entries[word].rating = stars;
+  localStorage.setItem("psychEntries", JSON.stringify(entries));
+  highlightStars(stars);
+  updateLog();
+}
+
+function highlightStars(n) {
+  [...starsEl.children].forEach((s,i)=>s.classList.toggle("selected", i<n));
+}
+
+function prevWord(){ if(currentIndex>0){currentIndex--; showWord();} }
+function nextWord(){ if(currentIndex<concepts.length-1){currentIndex++; showWord();} }
+
+function clearAll(){ if(confirm("Clear all entries?")){entries={};localStorage.removeItem("psychEntries");showWord();} }
+function clearEntry(){
+  const word = concepts[currentIndex];
+  delete entries[word];
+  localStorage.setItem("psychEntries", JSON.stringify(entries));
+  defEl.value=""; highlightStars(0); updateLog();
+}
+
+function updateLog(){
+  logEl.innerHTML="";
+  for(const w of concepts){
+    if(entries[w]){
+      const div=document.createElement("div");
+      div.innerHTML=`<b>${w}</b>: ${entries[w].definition} ⭐${entries[w].rating}`;
+      logEl.appendChild(div);
+    }
+  }
+}
+
+function downloadEntriesTxt(){
+  let text="";
+  for(const w of concepts){
+    if(entries[w]) text+=`${w}: ${entries[w].definition} (⭐${entries[w].rating})\n\n`;
+  }
+  const blob=new Blob([text],{type:"text/plain"});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download="psychology_glossary.txt";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+showWord();
+</script>
+</body>
+</html>
